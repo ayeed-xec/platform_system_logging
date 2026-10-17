@@ -49,6 +49,8 @@
 #include <pthread.h>
 #elif defined(__linux__) && !defined(__ANDROID__)
 #include <syscall.h>
+#elif defined(__FreeBSD__)
+#include <pthread_np.h>
 #elif defined(_WIN32)
 #include <windows.h>
 #endif
@@ -118,7 +120,7 @@ void __android_log_close() {
 }
 
 // BSD-based systems like Android/macOS have getprogname(). Others need us to provide one.
-#if !defined(__APPLE__) && !defined(__BIONIC__)
+#if !defined(__APPLE__) && !defined(__BIONIC__) && !defined(__FreeBSD__)
 static const char* getprogname() {
 #ifdef _WIN32
   static bool first = true;
@@ -245,6 +247,8 @@ static uint64_t GetThreadId() {
   return tid;
 #elif defined(__linux__)
   return syscall(__NR_gettid);
+#elif defined(__FreeBSD__)
+  return pthread_getthreadid_np();
 #elif defined(_WIN32)
   return GetCurrentThreadId();
 #endif
