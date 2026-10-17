@@ -1,0 +1,9 @@
+package: "android.logd.flags"
+container: "system"
+
+flag {
+  name: "use_iouring"
+  namespace: "system_performance"
+  description: "Enables iouring usage in logd"
+  bug: "407827154"
+}
